@@ -1,28 +1,38 @@
-board = [[4] * 8] * 2 
-board[0][0] = 0
-board[0][7] = 0
-board[1][0] = 0
-board[1][7] = 0
-positions = ["", 1,2,3,4,5,6,""]
+# initialize board
+board = [4] * 14
+pot1 = 6
+pot2 = 13
 
-# Player 1 now has the ability to move pieces on its own side of the board
-player1 = True
-if (player1):
-    side = board[0]
-    print(side)
-    print(positions)
-    # attempt to get user input
-    try:
-        pos = int(input("choose which rocks you would like to move:"))
-        print("You chose ", pos)
-    except ValueError:
-        print("Please enter a positive integer between 1 and 7")
-    
-    # move rocks across users side of board
-    rocks = side[pos]
-    side[pos] = 0
-    for n in range(1, rocks + 1):
-      side[pos+n] += 1
-
-    print(board[0])
-        
+# set pots to 0
+board[pot1] = 0
+board[pot2] = 0 
+skip = False
+def skip(user, pos, n, dist):
+    if (user == 1 and pos + n == pot1):
+        dist + 1
+        return True
+    if (user == 2 and pos + n == pot2):
+        dist + 1
+        return True
+    else:
+        return False
+def Move(user, pos):
+    dist = board[pos]
+    board[pos] = 0
+    for n in range(1, dist + 1):
+        skipper = skip(user, pos, n, dist)
+        if skipper == True:
+            dist += 1
+            continue
+        board[n] += 1
+        if ((pos + n) > len(board)):
+            for k in range(0, (dist + 1 - n)):
+                skipper = skip(user, pos, n, dist)
+                if skipper == True:
+                    dist += 1
+                    continue
+                board[k] += 1
+        board[pos + n] += 1
+for x in range(0, 10):
+    Move(1, 2)
+    print(board)
